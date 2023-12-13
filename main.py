@@ -4,9 +4,24 @@ import smtplib
 import img2pdf
 from flask import Flask, render_template, request
 from datetime import datetime
-
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///userlist.db'
+# Initialise the db
+db = SQLAlchemy(app)
+
+
+# Create a db model
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<User %r>' % self.id
+
+#
 
 subscribers = []
 
@@ -65,8 +80,8 @@ def form():
     message = 'You have subscribed to my newsletter. Thank you!'
     server = smtplib.SMTP('smtp.gmail.com', port=587)
     server.starttls()
-    server.login('sanrkhilko@gmail.com', 'ICH_will_ficken_2013')
-    server.sendmail('Alex', email, message)
+    server.login('ibotmailsuper@gmail.com', 'ubry qnqa pavf eiwj')
+    server.sendmail('Admin', email, message)
 
     if not first_name or not last_name or not email:
         error_state = 'All fields are required...'
@@ -90,4 +105,25 @@ def about():
     names = ['John', 'Mary', 'Barry', 'Mess']
     title = 'About Online-JPG-to-PDF-Converter'
     return render_template('about.html', names=names, title=title)
+
+
+@app.route('/userlist', methods=['GET', 'POST'])
+def userlist():
+
+    if request.method == 'POST':
+        users_name = request.form['name']
+        new_user = Users(name=users_name)
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+        except:
+            return "Error adding user"
+
+    names = ['John', 'Mary', 'Barry', 'Mess']
+    title = 'UserList'
+
+    users = Users.query.order_by(Users.date_created)
+
+    return render_template('userlist.html', users=users, title=title)
 

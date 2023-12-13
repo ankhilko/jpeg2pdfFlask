@@ -1,3 +1,4 @@
 flask
 waitress
 img2pdf
+flask-sqlalchemy

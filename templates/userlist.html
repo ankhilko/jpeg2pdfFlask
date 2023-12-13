@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <h1>Users</h1>
+
+        <div>
+            <form method="POST" action="/userlist">
+                <input type="text" placeholder="Name" name="name">
+                <button type="submit" class="btn btn-secondary">Add User</button>
+            </form>
+
+        </div>
+
+    </div>
+
+    <div class="container">
+        {% if users %}
+            <ul>
+            {% for use in users %}
+                <li>{{ use }} {{ use.name }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+    </div>
+
+{% endblock %}
