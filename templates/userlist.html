@@ -18,9 +18,12 @@
     <div class="container">
         {% if users %}
             <ul>
-            {% for use in users %}
-                <li>{{ use }} {{ use.name }}</li>
-            {% endfor %}
+                {% for use in users %}
+                    <li>{{ use }} {{ use.name }}
+                        <a href="/updateuser/{{ use.id }}" class="btn btn-outline-secondary btn-sm" >update</a>
+                        <a href="/deleteuser/{{ use.id }}" class="btn btn-outline-danger btn-sm" >delete</a>
+                    </li>
+                {% endfor %}
             </ul>
         {% endif %}
 
